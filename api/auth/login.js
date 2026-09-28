@@ -1,4 +1,4 @@
-const handler = require("../../lib/api-handler");
+const handler = require("../[...path].js");
 
 module.exports = async (req, res) => {
   req.query = {
