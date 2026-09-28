@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Demo UI · CanteenGo</title>
+<link rel="icon" href="favicon.ico" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="demo-shell">
+  <div class="demo-topbar">
+    <div><strong>CanteenGo</strong> <span class="tag">UI Demo · Long Wang inspired</span></div>
+    <a href="index.html" class="btn btn-gold btn-sm">Vào hệ thống thật</a>
+  </div>
+
+  <div class="demo-controls">
+    <div>
+      <div class="eyebrow" style="margin-bottom:6px;color:var(--gold)">PREVIEW</div>
+      <div class="page-title" style="font-size:34px;margin:0">Xem thử giao diện</div>
+    </div>
+    <div class="demo-switcher" role="tablist">
+      <button class="active" data-tab="customer">Khách hàng</button>
+      <button data-tab="kitchen">Bếp / KDS</button>
+      <button data-tab="admin">Quản trị</button>
+    </div>
+  </div>
+
+  <main class="container" style="padding-top:14px">
+    <div class="demo-panel active" id="tab-customer">
+      <div class="demo-grid">
+        <section class="demo-hero-card">
+          <div>
+            <div class="eyebrow">CANTEENGO · ĂN NGON MỖI NGÀY</div>
+            <h2>Thực đơn<br/>tinh chọn</h2>
+            <p>Không gian giao diện lấy cảm hứng từ bố cục menu của Long Wang: ảnh lớn, nền kem, xanh ngọc và vàng champagne.</p>
+            <div class="demo-actions"><a class="btn btn-gold" href="menu.html">Mở trang thực đơn</a><a class="btn btn-outline" style="border-color:#fff;color:#fff" href="cart.html">Xem giỏ hàng</a></div>
+          </div>
+        </section>
+        <aside class="demo-side-card">
+          <div class="db-status"><span class="db-dot" id="dbDot"></span><span id="dbText">Chưa kiểm tra Database</span></div>
+          <p class="small-note" style="margin:12px 0 18px">Demo này không cần đăng nhập. Nút bên dưới kiểm tra endpoint database khi project đã deploy lên Vercel + Supabase.</p>
+          <button class="btn btn-primary btn-block" id="dbCheck">Kiểm tra kết nối DB</button>
+          <hr style="border:0;border-top:1px solid var(--line);margin:22px 0"/>
+          <div class="small-note">Luồng thật: Đăng nhập → Menu → Giỏ hàng → QR thanh toán → Đơn của tôi → KDS → Dashboard Admin.</div>
+        </aside>
+      </div>
+      <div class="demo-menu-cards" id="demoFoods"></div>
+    </div>
+
+    <div class="demo-panel" id="tab-kitchen">
+      <div class="kpi-row">
+        <div class="kpi"><div class="label">Đang chờ</div><div class="value">03</div></div>
+        <div class="kpi"><div class="label">Đang chế biến</div><div class="value">05</div></div>
+        <div class="kpi"><div class="label">Sẵn sàng nhận</div><div class="value">02</div></div>
+        <div class="kpi"><div class="label">Doanh thu ca</div><div class="value">2,84tr</div></div>
+      </div>
+      <div class="section-card" style="margin-top:18px">
+        <div class="flex-between"><div><div class="eyebrow" style="color:var(--gold);margin:0">KDS · LIVE QUEUE</div><h2 style="margin:3px 0 0">Đơn cần chuẩn bị</h2></div><span class="status-pill status-DANG_CHUAN_BI">ĐANG CHẠY</span></div>
+        <div class="demo-list">
+          <div class="demo-order"><div class="flex-between"><strong>DH0012</strong><span class="status-pill status-DA_THANH_TOAN">ĐÃ THANH TOÁN</span></div><div class="small-note">Cơm tấm sườn x1 · Bún chả Hà Nội x2</div><button class="btn btn-primary btn-sm" style="margin-top:12px">Bắt đầu chuẩn bị</button></div>
+          <div class="demo-order"><div class="flex-between"><strong>DH0011</strong><span class="status-pill status-SAN_SANG_NHAN">SẴN SÀNG NHẬN</span></div><div class="small-note">Phở bò tái x1</div><button class="btn btn-gold btn-sm" style="margin-top:12px">Hoàn thành</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-panel" id="tab-admin">
+      <div class="kpi-row">
+        <div class="kpi"><div class="label">Doanh thu</div><div class="value">18,42tr</div></div>
+        <div class="kpi"><div class="label">Đơn hoàn thành</div><div class="value">128</div></div>
+        <div class="kpi"><div class="label">Món đang bán</div><div class="value">24</div></div>
+        <div class="kpi"><div class="label">Món hết hàng</div><div class="value">03</div></div>
+      </div>
+      <div class="demo-grid" style="margin-top:18px">
+        <div class="section-card"><h2>Quản lý món ăn</h2><table class="data-table"><thead><tr><th>Tên món</th><th>Giá</th><th>Trạng thái</th></tr></thead><tbody><tr><td>Cơm tấm sườn</td><td>32.000đ</td><td><span class="status-pill status-HOAN_THANH">Đang bán</span></td></tr><tr><td>Phở bò tái</td><td>35.000đ</td><td><span class="status-pill status-HOAN_THANH">Đang bán</span></td></tr><tr><td>Bún đậu mắm tôm</td><td>28.000đ</td><td><span class="status-pill status-DA_HUY">Hết hàng</span></td></tr></tbody></table></div>
+        <div class="section-card"><h2>Quản lý đơn</h2><div class="demo-list"><div class="demo-order"><strong>DH0012</strong><div class="small-note">12:10 · 94.000đ</div></div><div class="demo-order"><strong>DH0011</strong><div class="small-note">11:55 · 35.000đ</div></div></div><a class="btn btn-primary btn-block" style="margin-top:14px" href="admin/dashboard.html">Mở dashboard thật</a></div>
+      </div>
+    </div>
+  </main>
+
+<script src="js/api.js"></script>
+<script>
+  const foods = [
+    {name:"Cơm tấm sườn", price:32000, img:"https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=900&q=80", desc:"Sườn nướng · bì · chả · trứng"},
+    {name:"Bún chả Hà Nội", price:30000, img:"https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=900&q=80", desc:"Chả nướng · rau sống · nước chấm"},
+    {name:"Phở bò tái", price:35000, img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80", desc:"Nước dùng ninh xương · bò tái"}
+  ];
+  document.getElementById("demoFoods").innerHTML = foods.map(f => `<article class="demo-product"><img src="${f.img}" alt="${f.name}" loading="lazy"><div class="body"><h3>${f.name}</h3><div class="meta">${f.desc}</div><div class="price">${new Intl.NumberFormat('vi-VN').format(f.price)}đ</div><a class="btn btn-primary btn-sm" href="menu.html">Đặt món</a></div></article>`).join("");
+
+  document.querySelectorAll("[data-tab]").forEach(btn => btn.addEventListener("click", () => {
+    document.querySelectorAll("[data-tab]").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".demo-panel").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active"); document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+  }));
+
+  document.getElementById("dbCheck").addEventListener("click", async () => {
+    const dot = document.getElementById("dbDot"), label = document.getElementById("dbText"), button = document.getElementById("dbCheck");
+    button.disabled = true; button.textContent = "Đang kiểm tra...";
+    try { const res = await apiFetch("/db-health"); dot.className = "db-dot ok"; label.textContent = res.message || "Database đã kết nối"; }
+    catch (e) { dot.className = "db-dot bad"; label.textContent = "Chưa kết nối DB · Hãy cấu hình Vercel/Supabase"; }
+    finally { button.disabled = false; button.textContent = "Kiểm tra kết nối DB"; }
+  });
+</script>
+</body>
+</html>

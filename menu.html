@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thực đơn - CanteenGo</title>
+<link rel="icon" href="favicon.ico" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div class="topnav">
+  <div class="brand">CanteenGo</div>
+  <nav>
+    <a href="menu.html" class="active">Thực đơn</a>
+    <a href="cart.html">Giỏ hàng <span id="cartBadge" class="badge badge-ok hidden">0</span></a>
+    <a href="orders.html">Đơn của tôi</a>
+    <a href="demo.html">Demo</a>
+  </nav>
+  <div class="userbox">
+    <span id="userName"></span>
+    <span class="role-badge">Sinh viên</span>
+    <button class="btn btn-outline btn-sm" id="btnLogout">Đăng xuất</button>
+  </div>
+</div>
+
+<div class="category-bar">
+  <a class="active" href="#menuSection">Tất cả</a>
+  <a href="#menuSection">Món chính</a>
+  <a href="#menuSection">Bún & Phở</a>
+  <a href="#menuSection">Hải sản</a>
+  <a href="#menuSection">Rau & Salad</a>
+  <a href="#menuSection">Món dùng kèm</a>
+  <a href="#menuSection">Đồ uống</a>
+</div>
+
+<section class="menu-hero">
+  <div class="menu-hero-panel">
+    <div>
+      <div class="eyebrow">TÍNH TUYỂN · PHONG VỊ TƯƠI LÀNH</div>
+      <h1>Thực đơn</h1>
+      <p>Chọn món từ thực đơn CanteenGo, đặt trước và nhận đúng khung giờ. Giao diện được lấy cảm hứng từ bố cục menu xanh - kem - vàng trong ảnh tham chiếu.</p>
+      <a href="#menuSection" class="btn btn-primary" style="background:#d2b06b;color:#163c2f;border:0;">Khám phá thực đơn</a>
+    </div>
+  </div>
+</section>
+
+<div class="container" id="menuSection">
+  <div class="section-intro">
+    <div class="eyebrow">Bếp CanteenGo</div>
+    <h2>Hương vị cho từng ngày</h2>
+    <p>Chọn món bạn yêu thích, thêm vào giỏ và đặt trước thời gian nhận món.</p>
+  </div>
+  <div class="cg-features">
+    <div class="cg-feature"><div class="num">01</div><h3>Tươi ngon</h3><p>Món ăn được cập nhật theo thực đơn và tình trạng bán thực tế.</p></div>
+    <div class="cg-feature"><div class="num">02</div><h3>Đặt nhanh</h3><p>Đặt món trực tuyến, hạn chế thời gian xếp hàng tại căn tin.</p></div>
+    <div class="cg-feature"><div class="num">03</div><h3>Nhận đúng giờ</h3><p>Chọn khung giờ nhận món phù hợp với lịch học và làm việc.</p></div>
+  </div>
+  <div class="menu-toolbar">
+    <div><div><div class="eyebrow" style="color:var(--gold);margin:0 0 5px">CANTEENGO · MENU</div><div class="page-title" style="margin:0;font-size:30px;">Món đang phục vụ</div><p class="page-subtitle" style="margin:5px 0 0;">Dữ liệu món được tải trực tiếp từ database qua Vercel Function.</p></div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn btn-outline" href="demo.html">Xem demo</a><a class="btn btn-primary" href="cart.html">Xem giỏ hàng</a></div>
+  </div>
+  <div id="alertBox"></div>
+  <div class="menu-grid" id="menuGrid"></div>
+  <div id="emptyState" class="empty-state hidden">
+    <div class="icon">🍽️</div>
+    <div>Chưa có món ăn nào trong thực đơn.</div>
+  </div>
+</div>
+
+<section class="cg-strip">
+  <div class="eyebrow">CANTEEN GO</div>
+  <h2>Một bữa ăn ngon, một ngày nhẹ nhàng hơn</h2>
+  <p>Đặt trước món ăn để tiết kiệm thời gian và chủ động lịch nhận món tại căn tin.</p>
+  <a class="btn btn-primary" style="background:#fff;color:#174b3a;" href="cart.html">Đặt món ngay</a>
+</section>
+<footer class="cg-footer">
+  <div class="cg-footer-grid">
+    <div><h3>CanteenGo</h3><p>Nền tảng đặt món dành cho căn tin, giúp người dùng xem thực đơn, đặt món và theo dõi đơn hàng thuận tiện.</p></div>
+    <div><h4>Khám phá</h4><p><a href="menu.html">Thực đơn</a></p><p><a href="orders.html">Đơn của tôi</a></p><p><a href="cart.html">Giỏ hàng</a></p><p><a href="demo.html">Demo giao diện</a></p></div>
+    <div><h4>Hỗ trợ</h4><p>Thời gian phục vụ: 07:00 – 18:00</p><p>Hệ thống CanteenGo · Uông Bí</p></div>
+  </div>
+  <div class="cg-footer-bottom">© 2026 CanteenGo. All rights reserved.</div>
+</footer>
+
+<script src="js/api.js"></script>
+<script src="js/cart.js"></script>
+<script>
+  const user = Auth.requireRole(["ROLE_BUYER"]);
+  if (user) {
+    document.getElementById("userName").textContent = user.hoTen;
+    document.getElementById("btnLogout").addEventListener("click", () => { Auth.clear(); goTo("index.html"); });
+    updateCartBadge();
+    loadMenu();
+  }
+
+  const foodEmoji = ["🍚","🍜","🍲","🥘","🍛","🍝","🍣","🥗","🍤","🍢","🌮","🥪"];
+  function emojiFor(id) { return foodEmoji[id % foodEmoji.length]; }
+
+  async function loadMenu() {
+    const grid = document.getElementById("menuGrid");
+    const alertBox = document.getElementById("alertBox");
+    try {
+      const items = await apiFetch("/menu");
+      grid.innerHTML = "";
+      document.getElementById("emptyState").classList.toggle("hidden", items.length > 0);
+      items.forEach((mon) => grid.appendChild(renderCard(mon)));
+    } catch (err) {
+      alertBox.innerHTML = `<div class="alert alert-error">${err.message || "Không tải được thực đơn"}</div>`;
+    }
+  }
+
+  const fallbackImages = [
+    "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&w=900&q=80"
+  ];
+
+  function renderCard(mon) {
+    const outOfStock = mon.trangThai === "HET_HANG";
+    const image = mon.hinhAnh || fallbackImages[(Number(mon.maMon) - 1) % fallbackImages.length];
+    const card = document.createElement("div");
+    card.className = "food-card" + (outOfStock ? " out-of-stock" : "");
+    card.innerHTML = `
+      <div class="thumb"><img src="${image}" alt="${mon.tenMon}" loading="lazy" onerror="this.src='${fallbackImages[0]}'"/></div>
+      <div class="body">
+        <div class="flex-between">
+          <h3>${mon.tenMon}</h3>
+          ${outOfStock ? '<span class="badge badge-out">HẾT HÀNG</span>' : '<span class="badge badge-ok">Còn hàng</span>'}
+        </div>
+        <div class="desc">${mon.moTa || ""}</div>
+        <div class="price">${formatCurrency(mon.donGia)}</div>
+        ${outOfStock
+          ? '<button class="btn btn-outline btn-block" disabled>Hết hàng</button>'
+          : `<div class="qty-row">
+               <input type="number" min="1" value="1" id="qty-${mon.maMon}" />
+               <button class="btn btn-primary" style="flex:1" data-add="${mon.maMon}">Thêm vào giỏ</button>
+             </div>`
+        }
+      </div>
+    `;
+    if (!outOfStock) {
+      card.querySelector("[data-add]").addEventListener("click", () => {
+        const qtyInput = document.getElementById(`qty-${mon.maMon}`);
+        const soLuong = Math.max(1, parseInt(qtyInput.value || "1", 10));
+        Cart.add(mon, soLuong);
+        updateCartBadge();
+        qtyInput.value = 1;
+      });
+    }
+    return card;
+  }
+
+  // Risk #5 - Khi mang ket noi lai, tu dong lam moi thuc don de dong bo trang thai moi nhat
+  window.addEventListener("ubg:reconnected", loadMenu);
+</script>
+</body>
+</html>
