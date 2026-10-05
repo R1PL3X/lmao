@@ -194,66 +194,20 @@ module.exports = async (req, res) => {
       return send(res, 200, { accessToken: signSession(user), nguoiDung: userView(user), redirectTo: redirect });
     }
 
-    if (method === "POST" && path === "/auth/register") {
-  console.log("========== REGISTER ==========");
-  console.log("REGISTER BODY:", body);
-
-  const email = String(body.email  "").trim().toLowerCase();
-  const name = String(body.hoTen 
- "").trim();
-  const password = String(body.matKhau || "");
-
-  const role = ["ROLE_BUYER", "ROLE_STAFF"].includes(body.vaiTro)
-    ? body.vaiTro
-    : "ROLE_BUYER";
-
-  if (!name) {
-    return fail(res, 400, "Thiếu họ tên.");
-  }
-
-  if (!email) {
-    return fail(res, 400, "Thiếu email.");
-  }
-
-  if (!/^\S+@\S+.\S+$/.test(email)) {
-    return fail(res, 400, "Email không hợp lệ.");
-  }
-
-  if (!password) {
-    return fail(res, 400, "Thiếu mật khẩu.");
-  }
-
-  if (password.length < 6) {
-    return fail(res, 400, "Mật khẩu phải có ít nhất 6 ký tự.");
-  }
-
-  try {
-    await database().query(
-      INSERT INTO users 
-        (ho_ten, email, mat_khau, vai_tro) 
-       VALUES ($1, $2, $3, $4),
-      [
-        name,
-        email,
-        await hashPassword(password),
-        role
-      ]
-    );
-  } catch (error) {
-    console.error("REGISTER DATABASE ERROR:", error);
-
-    if (error.code === "23505") {
-      return fail(res, 409, "Email này đã được sử dụng.");
+  if (method === "POST" && path === "/auth/register") {
+      const email = String(body.email  "").trim().toLowerCase();
+      const name = String(body.hoTen  "").trim();
+      const password = String(body.matKhau  "");
+      const role = ["ROLE_BUYER", "ROLE_STAFF"].includes(body.vaiTro) ? body.vaiTro : "ROLE_BUYER";
+      if (!name  !/^\S+@\S+.\S+$/.test(email) || password.length < 6) return fail(res, 400, "Vui lòng nhập đầy đủ thông tin hợp lệ.");
+      try {
+        await database().query("INSERT INTO users (ho_ten, email, mat_khau, vai_tro) VALUES ($1, $2, $3, $4)", [name, email, await hashPassword(password), role]);
+      } catch (error) {
+        if (error.code === "23505") return fail(res, 409, "Email này đã được sử dụng.");
+        throw error;
+      }
+      return send(res, 201, { message: "Đăng ký thành công." });
     }
-
-    throw error;
-  }
-
-  return send(res, 201, {
-    message: "Đăng ký thành công."
-  });
-}
-
 
     if (method === "POST" && path === "/auth/forgot-password") {
       return fail(res, 501, "Chức năng gửi email đặt lại mật khẩu chưa được cấu hình.");
