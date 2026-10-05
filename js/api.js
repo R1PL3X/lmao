@@ -89,26 +89,66 @@ function makeFakeQrDataUri(seedText) {
  */
 async function apiFetch(path, options = {}) {
   const [rawPath, queryStr] = path.split("?");
-  const apiUrl = new URL(`api${rawPath}${queryStr ? `?${queryStr}` : ""}`, SITE_ROOT);
-  const headers = {"Content-Type":"application/json"};
+
+  // API luôn chạy cùng domain trên Vercel
+  const apiUrl = /api${rawPath}${queryStr ? ?${queryStr} : ""};
+
+  const headers = {
+    "Content-Type": "application/json",
+  };
+
   const token = Auth.getToken();
-  if (token) headers["X-UBG-Token"] = token;
+
+  if (token) {
+    headers["X-UBG-Token"] = token;
+  }
+
   let response;
+
   try {
-    response = await fetch(apiUrl.href, {
-      method: (options.method || "GET").toUpperCase(),
+    response = await fetch(apiUrl, {
+      method: (options.method  "GET").toUpperCase(),
       headers,
       credentials: "same-origin",
-      body: options.body ? (typeof options.body === "string" ? options.body : JSON.stringify(options.body)) : undefined
+      body: options.body
+        ? (typeof options.body === "string"
+            ? options.body
+            : JSON.stringify(options.body))
+        : undefined,
     });
   } catch (e) {
-    throw {status:0, message:"Khong ket noi duoc may chu. Vui long thu lai sau."};
+    throw {
+      status: 0,
+      message: "Khong ket noi duoc may chu. Vui long thu lai sau.",
+    };
   }
-  let data={}; try { data=await response.json(); } catch(e) {}
-  if (!response.ok) throw {status:response.status, message:data.message || "May chu tra ve loi."};
-  if (rawPath.startsWith("/thanhtoan/") && data && !data.qrImageBase64 && data.maQr && typeof makeFakeQrDataUri==="function") {
-    data.qrImageBase64=makeFakeQrDataUri(data.maQr);
+
+  let data = {};
+
+  try {
+    data = await response.json();
+  } catch (e) {
+    data = {};
   }
+
+  if (!response.ok) {
+    throw {
+      status: response.status,
+      message: data.message  "May chu tra ve loi.",
+    };
+  }
+
+  // Tao QR gia lap neu backend khong tra anh QR
+  if (
+    rawPath.startsWith("/thanhtoan/") &&
+    data &&
+    !data.qrImageBase64 &&
+    data.maQr &&
+    typeof makeFakeQrDataUri === "function"
+  ) {
+    data.qrImageBase64 = makeFakeQrDataUri(data.maQr);
+  }
+
   return data;
 }
 
