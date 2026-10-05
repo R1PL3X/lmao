@@ -111,20 +111,12 @@ function pathFromRequest(req) {
 }
 
 function requestBody(req) {
-  if (req.body && typeof req.body === "object") {
-    return req.body;
-  }
-
   if (typeof req.body === "string") {
-    try {
-      return JSON.parse(req.body);
-    } catch (_) {
-      return {};
-    }
+    try { return JSON.parse(req.body); } catch (_) { return {}; }
   }
-
-  return {};
+  return req.body || {};
 }
+
 async function createOrder(user, body) {
   const items = Array.isArray(body.items) ? body.items : [];
   if (!items.length) throw Object.assign(new Error("Giỏ hàng đang trống."), { status: 400 });
@@ -194,12 +186,12 @@ module.exports = async (req, res) => {
       return send(res, 200, { accessToken: signSession(user), nguoiDung: userView(user), redirectTo: redirect });
     }
 
-  if (method === "POST" && path === "/auth/register") {
-      const email = String(body.email  "").trim().toLowerCase();
-      const name = String(body.hoTen  "").trim();
-      const password = String(body.matKhau  "");
+    if (method === "POST" && path === "/auth/register") {
+      const email = String(body.email || "").trim().toLowerCase();
+      const name = String(body.hoTen || "").trim();
+      const password = String(body.matKhau || "");
       const role = ["ROLE_BUYER", "ROLE_STAFF"].includes(body.vaiTro) ? body.vaiTro : "ROLE_BUYER";
-      if (!name  !/^\S+@\S+.\S+$/.test(email) || password.length < 6) return fail(res, 400, "Vui lòng nhập đầy đủ thông tin hợp lệ.");
+      if (!name || !/^\S+@\S+\.\S+$/.test(email) || password.length < 6) return fail(res, 400, "Vui lòng nhập đầy đủ thông tin hợp lệ.");
       try {
         await database().query("INSERT INTO users (ho_ten, email, mat_khau, vai_tro) VALUES ($1, $2, $3, $4)", [name, email, await hashPassword(password), role]);
       } catch (error) {
