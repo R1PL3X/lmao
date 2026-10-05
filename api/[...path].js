@@ -111,12 +111,20 @@ function pathFromRequest(req) {
 }
 
 function requestBody(req) {
-  if (typeof req.body === "string") {
-    try { return JSON.parse(req.body); } catch (_) { return {}; }
+  if (req.body && typeof req.body === "object") {
+    return req.body;
   }
-  return req.body || {};
-}
 
+  if (typeof req.body === "string") {
+    try {
+      return JSON.parse(req.body);
+    } catch (_) {
+      return {};
+    }
+  }
+
+  return {};
+}
 async function createOrder(user, body) {
   const items = Array.isArray(body.items) ? body.items : [];
   if (!items.length) throw Object.assign(new Error("Giỏ hàng đang trống."), { status: 400 });
